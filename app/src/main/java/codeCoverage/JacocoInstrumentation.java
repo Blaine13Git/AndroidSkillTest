@@ -149,5 +149,6 @@ public class JacocoInstrumentation extends Instrumentation implements FinishList
         if (mCoverage) {
             generateCoverageReport();
         }
+
     }
 }

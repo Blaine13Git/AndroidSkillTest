@@ -55,7 +55,6 @@ def ecFiles = [
 */
 
 task jacocoTestReport(type: JacocoReport) {
-//task applicationCodeCoverageReport(type: JacocoReport) {
     group = "Reporting"
     description = "Generate Jacoco coverage reports after running."
 
@@ -71,17 +70,12 @@ task jacocoTestReport(type: JacocoReport) {
                        '**/*$ModuleAdapter.class',
                        '**/*$ViewInjector*.class']
     )
-//java.lang.ClassNotFoundException: org.jacoco.ant.ReportTask
-//No value has been specified for property 'jacocoClasspath'.
-//    jacocoClasspath = fileTree(
-//            dir: '${buildDir}/'
-//    )
 
     sourceDirectories = files(coverageSourceDirs)
 //    sourceDirectories = fileTree(coverageSourceDirs)
 //    executionData = fileTree(dir: './coverageECs/',)
 //    executionData = files("$buildDir/coverage.ec","$buildDir/coverage1.ec")
-    executionData = files("${buildDir}/20170110_175654_1.0.ec")
+    executionData = files("${buildDir}/20170111_162202_1.0.ec")
 
     doFirst {
         new File("${buildDir}/intermediates/classes/").eachFileRecurse { file ->

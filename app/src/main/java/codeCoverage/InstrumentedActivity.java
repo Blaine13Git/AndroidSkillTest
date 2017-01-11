@@ -10,7 +10,7 @@ import android.util.Log;
 import com.windsing.androidskilltest.MainActivity;
 
 @SuppressLint("NewApi")
-public class InstrumentedActivity extends MainActivity{
+public class InstrumentedActivity extends MainActivity {
 
     public static String TAG = "IntrumentedPlayer";
 
@@ -27,8 +27,10 @@ public class InstrumentedActivity extends MainActivity{
     @Override
     public void onDestroy() {
         super.onDestroy();
+        super.finish();
+
         Log.d(TAG + ".InstrumentedActivity", "onDestroy()");
-        //super.finish();
+
         if (mListener != null) {
             mListener.onActivityFinished();
         }
