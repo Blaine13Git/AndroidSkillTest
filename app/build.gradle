@@ -47,12 +47,10 @@ def coverageSourceDirs = [
         './src/main/java/',
 ]
 
-/*
-def ecFiles = [
-        './coverageECs/coverage.ec',
+/*def ecFiles = [
+        '../JacocoDataDir/coverage.ec',
         './coverageECs/coverage1.ec'
-]
-*/
+]*/
 
 task jacocoTestReport(type: JacocoReport) {
     group = "Reporting"
@@ -73,9 +71,10 @@ task jacocoTestReport(type: JacocoReport) {
 
     sourceDirectories = files(coverageSourceDirs)
 //    sourceDirectories = fileTree(coverageSourceDirs)
-//    executionData = fileTree(dir: './coverageECs/',)
+
+    executionData = fileTree(dir: '../JacocoDataDir/')
 //    executionData = files("$buildDir/coverage.ec","$buildDir/coverage1.ec")
-    executionData = files("${buildDir}/20170111_162202_1.0.ec")
+//    executionData = files("${buildDir}/20170111_162202_1.0.ec")
 
     doFirst {
         new File("${buildDir}/intermediates/classes/").eachFileRecurse { file ->
