@@ -26,8 +26,8 @@ public class InstrumentedActivity extends MainActivity {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
         super.finish();
+        super.onDestroy();
 
         Log.d(TAG + ".InstrumentedActivity", "onDestroy()");
 
