@@ -1,8 +1,10 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'jacoco'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.1"
+    buildToolsVersion "25.0.2"
 
     useLibrary 'org.apache.http.legacy'
 
@@ -13,24 +15,79 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            testCoverageEnabled = true
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
+
+    lintOptions {
+        abortOnError false
+    }
+
+}
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    testCompile 'junit:junit:4.12'
 }
 
-buildscript {
-    repositories {
-        //mavenCentral() // or jcenter()
-        jcenter()
+// jacoco code coverage
+def coverageSourceDirs = [
+        './src/main/java/',
+]
+
+/*
+def ecFiles = [
+        './coverageECs/coverage.ec',
+        './coverageECs/coverage1.ec'
+]
+*/
+
+task jacocoTestReport(type: JacocoReport) {
+//task applicationCodeCoverageReport(type: JacocoReport) {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running."
+
+    reports {
+        html.enabled = true
+        html.destination = "${buildDir}/reports/html/"
     }
 
-    dependencies {
-        classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.2'
+    classDirectories = fileTree(
+            dir: './build/intermediates/classes/debug/com/',
+            excludes: ['**/R*.class',
+                       '**/*$InjectAdapter.class',
+                       '**/*$ModuleAdapter.class',
+                       '**/*$ViewInjector*.class']
+    )
+//java.lang.ClassNotFoundException: org.jacoco.ant.ReportTask
+//No value has been specified for property 'jacocoClasspath'.
+//    jacocoClasspath = fileTree(
+//            dir: '${buildDir}/'
+//    )
+
+    sourceDirectories = files(coverageSourceDirs)
+//    sourceDirectories = fileTree(coverageSourceDirs)
+//    executionData = fileTree(dir: './coverageECs/',)
+//    executionData = files("$buildDir/coverage.ec","$buildDir/coverage1.ec")
+    executionData = files("${buildDir}/20170110_175654_1.0.ec")
+
+    doFirst {
+        new File("${buildDir}/intermediates/classes/").eachFileRecurse { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
     }
 }
-
-// make sure this line comes *after* you apply the Android plugin
-apply plugin: 'com.getkeepsafe.dexcount'
